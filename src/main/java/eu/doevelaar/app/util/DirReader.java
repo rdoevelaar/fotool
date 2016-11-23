@@ -14,14 +14,9 @@ import java.util.stream.Stream;
 /**
  * Utility-class om een gegeven directory in te lezen.
  */
-public class DirReader {
+public abstract class DirReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DirReader.class);
     private static final int NO_SUBDIRS = 1;
-    private Path dir;
-
-//    public DirReader(Path directoryToRead) {
-//        this.dir = directoryToRead;
-//    }
 
     /**
      * Geeft een Stream terug van de opgegeven directory, zonder subdirectories.

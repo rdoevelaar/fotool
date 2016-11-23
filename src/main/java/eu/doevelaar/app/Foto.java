@@ -60,7 +60,6 @@ public class Foto {
         }
 
         newPath = this.path.resolveSibling(newName);
-        System.out.println(newPath.getFileName().toString());
 //        try {
 //            Files.move(this.path, newPath);
 //        } catch (IOException e) {

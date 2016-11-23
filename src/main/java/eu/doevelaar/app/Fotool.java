@@ -1,6 +1,9 @@
 package eu.doevelaar.app;
 
+import eu.doevelaar.app.util.ArgumentParser;
 import eu.doevelaar.app.util.DirReader;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,21 +29,30 @@ public class Fotool {
      * @param args Programma argumenten, zie beschrijving hierboven.
      */
     public static void main(String[] args) {
-        LOGGER.info("Start. args={}", args);
-
-        String naamPrefix = "DefaultPrefix";
-        String extension  = ".jpg";
+        final String DEFAULTNAAMPREFIX = "DefaultPrefix";
+        final String DEFAULTEXTENSION  = ".jpg";
         Integer counter = 1;
 
-        if (args.length == 0) {
-            throw new IllegalArgumentException("Geen directory opgegeven!");
+        LOGGER.info("Start.");
+        ArgumentParser ap = new ArgumentParser();
+        CommandLine cmd = ap.parse(args);       // Parse commandline arguments.
+
+        if (cmd.hasOption("?")) {
+            showHelpAndExit(0);
         }
-        String dir = args[0];
-        if (args.length > 1) {
-            naamPrefix = args[1];
+
+        String dir = cmd.getOptionValue('d');
+        String naamPrefix = cmd.getOptionValue('n');
+        String extension = cmd.getOptionValue('e');
+
+        // Defaults toepassen indien nodig.
+        if (naamPrefix==null) {
+            naamPrefix = DEFAULTNAAMPREFIX;
+            LOGGER.info("Geen naamprefix opgegeven, gebruik default: '{}'", naamPrefix);
         }
-        if (args.length > 2) {
-            extension = args[2];
+        if (extension==null) {
+            extension = DEFAULTEXTENSION;
+            LOGGER.info("Geen extensie opgegeven, gebruik default: '{}'", extension);
         }
 
         List<Foto> sortedFotos = createSortedList(Paths.get(dir), extension);
@@ -82,5 +94,10 @@ public class Fotool {
             e.printStackTrace(); // TODO
         }
         return fotolijst;
+    }
+
+    public static void showHelpAndExit(int status) {
+        new HelpFormatter().printHelp("Fotool", new ArgumentParser().getOptions(), true);
+        System.exit(status);
     }
 }
