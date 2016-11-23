@@ -1,6 +1,8 @@
 package eu.doevelaar.app;
 
 import eu.doevelaar.app.util.DirReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -10,6 +12,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Fotool {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Fotool.class);
+
     /**
      * Hernoemen van foto's in een directory op basis van EXIF data.
      *
@@ -22,6 +26,8 @@ public class Fotool {
      * @param args Programma argumenten, zie beschrijving hierboven.
      */
     public static void main(String[] args) {
+        LOGGER.info("Start. args={}", args);
+
         String naamPrefix = "DefaultPrefix";
         String extension  = ".jpg";
         Integer counter = 1;
@@ -33,6 +39,9 @@ public class Fotool {
         if (args.length > 1) {
             naamPrefix = args[1];
         }
+        if (args.length > 2) {
+            extension = args[2];
+        }
 
         List<Foto> sortedFotos = createSortedList(Paths.get(dir), extension);
 
@@ -40,6 +49,7 @@ public class Fotool {
             f.setFileName(naamPrefix + counter++ + f.getExtension());
             f.showRename();
         }
+        LOGGER.info("Done.");
     }
 
     /**
@@ -53,7 +63,7 @@ public class Fotool {
     private static List<Foto> createSortedList(Path pathToScan, String extension) {
         List<Foto> fotolijst = new ArrayList<>();
         try {
-            List<Path> bestandslijst = new DirReader(pathToScan).read(extension);
+            List<Path> bestandslijst = DirReader.read(pathToScan, extension);
 
             // Nu hebben we een lijst van alle bestanden. Deze willen we sorteren op basis van hun
             // aanmaak-datumtijd. Oplopend.

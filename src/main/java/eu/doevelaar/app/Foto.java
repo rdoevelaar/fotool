@@ -6,6 +6,8 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +19,8 @@ import java.util.Date;
  * De klasse bevat diverse methoden om metadata op te halen of in te stellen.
  */
 public class Foto {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Foto.class);
+
     private Path path, newPath;
     private final String extension;
     private Metadata metadata;
@@ -28,10 +32,8 @@ public class Foto {
 
         try {
             this.metadata = ImageMetadataReader.readMetadata(path.toFile());
-        } catch (ImageProcessingException e) {
-            System.out.println("Fout bij lezen Foto : " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Fout bij lezen Foto : " + e.getMessage());
+        } catch (ImageProcessingException | IOException e) {
+            LOGGER.error("Fout bij lezen Foto: {}", e);
         }
 
     }
@@ -53,6 +55,7 @@ public class Foto {
             throw new IllegalArgumentException("Geen geldige nieuwe naam opgegeven!");
         }
         if (!Files.isWritable(this.path)) {
+            LOGGER.error("Kan niet schrijven naar bestand '{}'", this.path.getFileName());
             throw new RuntimeException("Kan niet schrijven naar bestand " + this.path.getFileName());
         }
 
@@ -66,7 +69,7 @@ public class Foto {
     }
 
     public void showRename() {
-        System.out.println(String.format("%30s ==> %30s",
+        LOGGER.info(String.format("%30s ==> %30s",
                 path.getFileName().toString(),
                 newPath.getFileName().toString()));
     }
