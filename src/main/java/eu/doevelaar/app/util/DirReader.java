@@ -1,4 +1,4 @@
-package eu.doevelaar.app.fileutils;
+package eu.doevelaar.app.util;
 
 import java.io.IOException;
 import java.nio.file.Files;

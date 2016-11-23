@@ -1,6 +1,6 @@
 package eu.doevelaar.app;
 
-import eu.doevelaar.app.fileutils.DirReader;
+import eu.doevelaar.app.util.DirReader;
 
 import java.io.IOException;
 import java.nio.file.Path;

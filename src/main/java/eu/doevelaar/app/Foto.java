@@ -14,6 +14,7 @@ import java.util.Date;
 
 /**
  * Klasse voor een foto-bestand.
+ * De klasse bevat diverse methoden om metadata op te halen of in te stellen.
  */
 public class Foto {
     private Path path, newPath;
